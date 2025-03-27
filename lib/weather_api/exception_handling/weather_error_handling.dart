@@ -1,7 +1,7 @@
 class WeatherErrorHandling implements Exception
 {
-  String title;
-  String msg;
+  String? title;
+  String? msg;
 
   WeatherErrorHandling({required this.title, required this.msg});
 

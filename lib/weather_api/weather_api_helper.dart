@@ -41,7 +41,7 @@ class WeatherApiHelper
         }
       case 500:
       default:
-        throw FetchDataException(errorMsg: "Error occurred while communication with Server with Status Code : ${resp.statusCode}");
+        throw (FetchDataException(errorMsg: "Error occurred while communication with Server with Status Code : ${resp.statusCode}"));
     }
   }
 }

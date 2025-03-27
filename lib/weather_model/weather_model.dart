@@ -42,7 +42,7 @@ class DataWeatherModel
         cod: json['cod'],
         coord: CoordModel.fromJson(json['coord']),
         dt: json['dt'],
-        id: json['dt'],
+        id: json['id'],
         main: MainTempModel.fromJson(json['main']),
         name: json['name'],
         sys: SysModel.fromJson(json['sys']),
@@ -123,11 +123,11 @@ class MainTempModel {
       feels_like: json['feels_like'],
       grnd_level: json['grnd_level'],
       humidity: json['humidity'],
-      pressure: json['humidity'],
-      sea_level: json['humidity'],
-      temp: json['humidity'],
+      pressure: json['pressure'],
+      sea_level: json['sea_level'],
+      temp: json['temp'],
       temp_max: json['temp_max'],
-      temp_min: json['temp_max'],
+      temp_min: json['temp_min'],
     );
   }
 }
