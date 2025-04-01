@@ -25,7 +25,8 @@ class WeatherSer extends State<WeatherService>
   @override
   void initState() {
     super.initState();
-    context.read<WeatherBloc>().add(GetWeatherEvent());
+    //context.read<WeatherBloc>().add(GetWeatherEvent());
+    context.read<WeatherBloc>().add(GetWeatherByCityEvent(cityName: "miami"));
   }
 
   @override
@@ -61,7 +62,6 @@ class WeatherSer extends State<WeatherService>
                                 }
                               else if(state is WeatherLoadedState)
                                 {
-                                  //selectedDayTime = DateTime.fromMillisecondsSinceEpoch(state.resDataWeather.dt * 1000);
                                   return Text(state.resDataWeather.name!,style: TextStyle(fontWeight: FontWeight.w900,
                                     fontSize: 50,color: Colors.white70,
                                     decoration: TextDecoration.underline,
@@ -77,7 +77,32 @@ class WeatherSer extends State<WeatherService>
                     ),
                   ],
                 ),
-                    Text(df.format(selectedDayTime ?? DateTime.now()),style: TextStyle(fontSize: 25,color: Colors.white70, fontWeight: FontWeight.bold),),
+
+                BlocBuilder<WeatherBloc, WeatherState>(
+                  builder: (context,state){
+                  if(state is WeatherLoadingState)
+                {
+                  return Center(child: CircularProgressIndicator(),);
+                  }
+                  else if(state is WeatherErrorState)
+                 {
+                     return Center(child: Text("${state.errorMsg}"));
+                 }
+                 else if(state is WeatherLoadedState)
+                 {
+                   int timezoneOffset = state.resDataWeather.timezone ?? 0;
+                   DateTime cityTime = DateTime.fromMillisecondsSinceEpoch(state.resDataWeather.dt * 1000, isUtc: true).add(Duration(seconds: timezoneOffset));
+                   String formattedTime = DateFormat("hh:mm a").format(cityTime);
+
+                   return Text("$formattedTime",
+                     style: TextStyle(fontSize: 25, color: Colors.white70, fontWeight: FontWeight.bold),
+                   );
+                 }
+                 return Container();
+                  }
+                  ),
+
+                    //Text(df.format(selectedDayTime ?? DateTime.now()),style: TextStyle(fontSize: 25,color: Colors.white70, fontWeight: FontWeight.bold),),
 
                SizedBox(height: 40,),
 
@@ -95,16 +120,19 @@ class WeatherSer extends State<WeatherService>
                        {
                          return Column(
                            children: [
+
                              Text((state.resDataWeather.weather!=null && state.resDataWeather.weather!.isNotEmpty)
                              ? (state.resDataWeather.weather!.first.main ?? "No Data") : "No Data"
                              ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30,color: Colors.white70),),
 
+
                              Row(
                                mainAxisAlignment: MainAxisAlignment.center,
                                children: [
-                                 Text(state.resDataWeather.main!.temp!.toStringAsFixed(0),style: TextStyle(fontSize: 80,fontWeight: FontWeight.bold,color: Colors.white),),
-                                 Text("°C",style: TextStyle(fontSize: 80,fontWeight: FontWeight.bold,color: Colors.white)),
-                               ],
+                                 state.resDataWeather.weather !=null && state.resDataWeather.weather!.isNotEmpty ?
+                                 Text(state.resDataWeather.main!.temp!.toStringAsFixed(0),style: TextStyle(fontSize: 80,fontWeight: FontWeight.bold,color: Colors.white),):Container(),
+                                 Text("°C",style: TextStyle(fontSize: 80,fontWeight: FontWeight.bold,color: Colors.white)
+                                 ),],
                              ),
                              Row(
                                mainAxisAlignment: MainAxisAlignment.center,

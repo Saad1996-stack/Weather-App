@@ -19,8 +19,8 @@
 
     @override
     void initState() {
-      context.read<ForecastWeatherBloc>().add(GetForecastWeatherEvent());
       super.initState();
+      context.read<ForecastWeatherBloc>().add(GetForecastWeatherEvent());
     }
     @override
     Widget build(BuildContext context) {
@@ -52,8 +52,8 @@
                           scrollDirection: Axis.horizontal,
                           itemCount: state.resDataWeatherForecastModel.list.length,
                             itemBuilder: (_,index) {
-                              var weatherDetails = state.resDataWeatherForecastModel
-                                  .list[index];
+                              var weatherDetails = state.resDataWeatherForecastModel.list[index];
+
                               DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(weatherDetails.dt * 1000);
 
                               String formattedDate = DateFormat('M/d').format(dateTime); // Unique day format

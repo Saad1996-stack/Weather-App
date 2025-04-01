@@ -35,6 +35,24 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState>
         emit(WeatherErrorState(errorMsg: (e as WeatherErrorHandling).toErrorMsg()));
       }
     });
-  }
 
+    on<GetWeatherByCityEvent>((event, emit)async{
+      emit(WeatherLoadingState());
+
+      try {
+        var resJson = await WeatherApiHelp.getWeatherApi(url: "${WeatherUrl.getWetherUrl}q=${event.cityName}&appid=${WeatherUrl.getApiKey}&units=metric");
+        if (resJson != null) {
+          var mResWeatherCityData = DataWeatherModel.fromJson(resJson);
+          emit(WeatherLoadedState(resDataWeather: mResWeatherCityData));
+        }
+        else {
+          emit(WeatherErrorState(errorMsg: "oh.. No!!, Error Occurred"));
+        }
+      }
+      catch (e)
+      {
+        emit(WeatherErrorState(errorMsg: (e as WeatherErrorHandling).toErrorMsg()));
+      }
+    });
+  }
 }
